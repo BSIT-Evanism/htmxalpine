@@ -1,0 +1,41 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const data = await fetch("https://fakestoreapi.com/products?limit=5");
+const res = await data.json();
+console.log(res);
+---
+
+<Layout title="Home">
+  <div>
+    The count is
+    <span x-text="new Date().getFullYear()"></span>
+  </div>
+  <div x-data="{open: false}">
+    <button x-on:click="open = ! open">Toggle</button>
+    <div x-show="open" x-transition>Hello</div>
+    <h1>Color changes on click</h1>
+    <h1 x-bind:class="open ? 'text-red-200' : 'text-green-200'">Hello World</h1>
+  </div>
+  <div
+    x-data="{products: []}"
+    x-init="products = await (await fetch('https://fakestoreapi.com/products?limit=9')).json()"
+    x-cloak
+  >
+    <div class="grid grid-cols-3">
+      <template
+        class="grid grid-cols-3 grid-rows-3"
+        x-for="product in products"
+      >
+        <div class="text-black text-xl">
+          <h1 x-text="product.title" x-transition></h1>
+          <img
+            class="w-20 h-20"
+            x-bind:src="product.image"
+            x-bind:alt="product.title"
+          />
+        </div>
+      </template>
+    </div>
+  </div>
+</Layout>
